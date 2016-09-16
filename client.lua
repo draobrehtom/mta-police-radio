@@ -1,13 +1,13 @@
-local buferSound = {} 
-local buferString = "[R]:"
+local bufferSound = {} 
+local bufferString = "[R]:"
 local bindButton = {}
 local iterations = 1																			
 local a 																
-local iBufer = 1
+local iBuffer = 1
 local turn = true
 
 local screenWidth, screenHeight = guiGetScreenSize()
-local stringForDraw
+local stringToDraw
 local text
 local height = 500
 --[[
@@ -27,7 +27,7 @@ playSound("OFFICERSNEEDASSISTANCE.mp3")
 local p = 	
 {
 	--Place names for crime reports--
-	citiHall = {0, 19, "Citi Hall"},
+	cityHall = {0, 19, "City Hall"},
 	downTownLosSantos = {0, 27, "downtown Los Santos"},
 	eastLosSantos = {0, 28, "east Los Santos"},
 	losSantos = {0, 86, "Los Santos"},
@@ -40,7 +40,7 @@ local p =
 	red = {1, 12, "red"},
 	green = {1, 8, "green"},
 	blue = {1, 1, "blue"},
-	custimized = {1, 5, "custimized"},
+	customized = {1, 5, "customized"},
 	--//--
 
 	--Directions for crime reports--
@@ -122,7 +122,7 @@ local pages =
 	[4] = {4, p.losSantos, p.downTownLosSantos},
 	[5] = {5, p.suspectLastSeen},
 	[6] = {6, p.onFoot, p.onA},
-	[7] = {7, p.dark, p.red, p.green, p.blue, p.light, p.custimized},
+	[7] = {7, p.dark, p.red, p.green, p.blue, p.light, p.customized},
 	[8] = {8, p.fourDoor, p.twoDoor, p.motorBike, p.bike, p.taxi, p.coach, p.boat}
 	--[9] = {9, p.west},
 	--[10] = {10, p.west},
@@ -150,28 +150,26 @@ function handleRenderingText(text, height)
 	--removeEventHandler( "onClientRender", root, drawText())
 end
 
-function iBuferRetrive()
+function iBufferRetrive()
 	turn = false
-	iBufer = iBufer + 1
+	iBuffer = iBuffer + 1
 	setTimer(finalPlaySound, sLength, 1)
 end
 
 
 function finalPlaySound()
-	outputChatBox("Itteracija")
 	if turn then
-		sLength = playSoundFrom(buferSound[1])
+		sLength = playSoundFrom(bufferSound[1])
 	end
-	if iBufer <= #buferSound then
+	if iBuffer <= #bufferSound then
 		setTimer(function()
-					sLength = playSoundFrom(buferSound[iBufer])
+					sLength = playSoundFrom(bufferSound[iBuffer])
 				end, sLength, 1)
-		iBuferRetrive()
+		iBufferRetrive()
 	else
 		turn = true
-		iBufer = 1
-		outputChatBox(buferString .. ".")
-		buferString = "[R]:"
+		iBuffer = 1
+		bufferString = "[R]:"
 		unbindKey("Z", "down", finalPlaySound)
 		bindKey( "Z", "down", getLevel)
 	end
@@ -190,18 +188,16 @@ function bindedPlay(keyBind, lvlSound, sound)
 	height = height - 15
 	bindKey(keyBind, "down", function()
 							height = 500
-							buferSound[lvlSound - 1] = sound
+							bufferSound[lvlSound - 1] = sound
 							playSoundFrom(sound)
 							outputChatBox("[" ..(lvlSound - 1).. "] " ..keyBind.. ". " ..sound[3])
 							for k,v in pairs(bindButton) do
 								unbindKey(""..v.."", "down")
-								outputChatBox("unbind"..v)
 							end
-							buferString = buferString .. " " .. sound[3]
+							bufferString = bufferString .. " " .. sound[3]
 							iterations = iterations + 1
 							nextLevelSound()
 							end)
-	outputChatBox("bind" .. keyBind)
 end
 
 
